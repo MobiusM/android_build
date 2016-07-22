@@ -90,7 +90,7 @@ copy2(updater, "%s/update-binary" % updater_dir)
 updater_script = "%s/updater-script" % updater_dir
 
 # create the contents
-contents = "ui_print(\"installing RR Kernel...\");\n"
+contents = "ui_print(\"installing MobiusMarshmallow Kernel...\");\n"
 if boot_partition_type == "mtd":
     contents += "package_extract_file(\"boot.img\", \"/tmp/boot.img\");\n"
     contents += "write_raw_image(\"/tmp/boot.img\", \"%s\");\n" % boot_partition
@@ -104,6 +104,7 @@ contents += "mount(\"%s\", \"EMMC\", \"%s\", \"system\");\n" % (system_partition
 contents += "package_extract_dir(\"system\", \"/system\");\n"
 contents += "unmount(\"/system\");\n"
 contents += "ui_print(\" \");\n"
+contents += "ui_print(\"Made by MobiusM@XDA\");\n"
 contents += "ui_print(\"Done!\");"
 with open(updater_script, "w") as f:
     f.write(contents)
