@@ -31,6 +31,7 @@ out = argv[2]
 device = argv[3]
 defconfig = "%s/obj/KERNEL_OBJ/.config" % out
 source = getcwd() # PWD
+extradir = "/home/mobiusm/MobiusMarshmallowKernel/Makefile"
 
 try:
     bootline = search('(\S|\t| )+/boot\s.*\n*', fstab).group(0)
@@ -45,15 +46,18 @@ try:
 except:
     raise ValueError("malformed recovery.fstab")
 
+extraversion = search('TRACKVERSION = .*\n', open(extradir, 'r').read())
+trackversion = sub(r'(TRACKVERSION = )|\"|\n|-', "", extraversion.group(0))
+
 if path.exists(defconfig):
     prekernel_version = search('CONFIG_LOCALVERSION=.*\n', open(defconfig, 'r').read())
     if prekernel_version:
         kernel_version = sub(r'(CONFIG_LOCALVERSION=)|\"|\n|-', "", prekernel_version.group(0))
-        kernel_version = "%s-%s-kernel" % (kernel_version or "MobiusMarshmallow", device)
+        kernel_version = "%s-%s-kernel-%s" % (kernel_version or "MobiusMarshmallow", device, trackversion)
     else:
-        kernel_version = "MobiusMarshmallow-%s-kernel" % device
+        kernel_version = "MobiusMarshmallow-%s-kernel-%s" % device, trackversion
 else:
-    kernel_version = "MobiusMarshmallow-%s-kernel" % device
+    kernel_version = "MobiusMarshmallow-%s-kernel-%s" % device, trackversion
 
 updater = "%s/obj/EXECUTABLES/updater_intermediates/updater" % out
 signer = "%s/framework/signapk.jar" % environ['ANDROID_HOST_OUT']
